@@ -173,6 +173,11 @@ class CallbackHandlers final {
     callback_nmea_ = callback;
   }
 
+  void set_rtcm_callback(std::function<void(const std::vector<uint8_t> &)> callback) {
+    std::lock_guard<std::mutex> lock(callback_mutex_);
+    callback_rtcm_ = callback;
+  }
+
   /**
    * @brief Calls the callback handler for the message in the reader.
    * @param reader a reader containing a u-blox message
@@ -207,6 +212,52 @@ class CallbackHandlers final {
 
       nmea_start = buffer.find('$', nmea_end + 1);
       nmea_end = buffer.find('\n', nmea_start);
+    }
+  }
+
+  /**
+   * @brief Calls the callback handler for the rtcm messages in the reader.
+   * @param reader a reader containing an rtcm message
+   */
+  void handle_rtcm(ublox::Reader& reader) {
+    std::lock_guard<std::mutex> lock(callback_mutex_);
+    if (callback_rtcm_ == nullptr) {
+      return;
+    }
+
+    const uint8_t* buffer = reinterpret_cast<const uint8_t*>(reader.getExtraData().data());
+    const size_t buffer_size = reader.getExtraData().size();
+    size_t i = 0;
+
+    while (i + 3 < buffer_size)
+    {
+      // Check for preamble and reserved bits
+      if (!(buffer[i] == 0xD3 && (buffer[++i] & 0xFC) == 0x00))
+      {
+        continue;
+      }
+
+      // Extract payload length from the next 2 bytes
+      uint16_t length = ((uint16_t)buffer[i] & 0x03) << 8 | (uint16_t)buffer[i + 1];
+      // Align index of buffer to the first byte of the payload
+      i += 2;
+      uint32_t crc = ublox::Crc24Quick(0x000000, length + 3, &buffer[i - 3]);
+
+      if (buffer_size > i + length + 3)
+      {
+        uint32_t recv_crc = ((uint32_t)buffer[i + length] << 16) | 
+                            ((uint32_t)buffer[i + length + 1] << 8) | 
+                            (uint32_t)buffer[i + length + 2];
+        if (crc == recv_crc)
+        {
+          callback_rtcm_(std::vector<uint8_t>(buffer + i - 3, buffer + i + length + 3));
+        }
+        i += length + 3;
+      }
+      else
+      {
+        break;
+      }
     }
   }
 
@@ -264,6 +315,7 @@ class CallbackHandlers final {
       handle(reader);
     }
     handle_nmea(reader);
+    handle_rtcm(reader);
 
     // delete read bytes from ASIO input buffer
     std::copy(reader.pos(), reader.end(), data);
@@ -282,6 +334,7 @@ class CallbackHandlers final {
 
   //! Callback handler for nmea messages
   std::function<void(const std::string &)> callback_nmea_{nullptr};
+  std::function<void(const std::vector<uint8_t> &)> callback_rtcm_{nullptr};
 };
 
 }  // namespace ublox_gps

@@ -67,6 +67,25 @@ static inline uint16_t calculateChecksum(const uint8_t *data,
   return checksum;
 }
 
+
+static inline uint32_t Crc24Quick(uint32_t Crc, uint32_t Size, const uint8_t *Buffer) // sourcer32@gmail.com
+{
+  static const uint32_t crctab[] = { // Nibble lookup for Qualcomm CRC-24Q
+    0x00000000,0x01864CFB,0x038AD50D,0x020C99F6,0x0793E6E1,0x0615AA1A,0x041933EC,0x059F7F17,
+    0x0FA18139,0x0E27CDC2,0x0C2B5434,0x0DAD18CF,0x083267D8,0x09B42B23,0x0BB8B2D5,0x0A3EFE2E };
+ 
+  ssize_t i = 0;
+  while(Size--)
+  {
+    Crc ^= (uint32_t)Buffer[i++] << 16; // Apply byte
+    // Process 8-bits, 4 at a time, or 2 rounds
+    Crc = (Crc << 4) ^ crctab[(Crc >> 20) & 0x0F];
+    Crc = (Crc << 4) ^ crctab[(Crc >> 20) & 0x0F];
+  }
+ 
+  return(Crc & 0xFFFFFF); // Mask to 24-bit, as above optimized for 32-bit
+}
+
 }  // namespace ublox
 
 #endif  // UBLOX_SERIALIZATION_CHECKSUM_HPP

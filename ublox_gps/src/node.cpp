@@ -446,6 +446,7 @@ void UbloxNode::getRosParams() {
   this->declare_parameter("publish.tim.tm2", false);
 
   this->declare_parameter("publish.nmea", true);
+  this->declare_parameter("publish.rtcm", false);
 
   // INF parameters
   this->declare_parameter("inf.all", true);
@@ -498,6 +499,9 @@ void UbloxNode::getRosParams() {
   if (getRosBoolean(this, "publish.nmea")) {
     // Larger queue depth to handle all NMEA strings being published consecutively
     nmea_pub_ = this->create_publisher<nmea_msgs::msg::Sentence>("nmea", 20);
+  }
+  if (getRosBoolean(this, "publish.rtcm")) {
+    rtcm_pub_ = this->create_publisher<rtcm_msgs::msg::Message>("rtcm", 1);
   }
 
   // Create subscriber for RTCM correction data to enable RTK
@@ -623,6 +627,16 @@ void UbloxNode::subscribe() {
       m.header.frame_id = frame_id_;
       m.sentence = sentence;
       nmea_pub_->publish(m);
+    });
+  }
+
+  if (getRosBoolean(this, "publish.rtcm")) {
+    gps_->subscribe_rtcm([this](const std::vector<uint8_t> &message) {
+      rtcm_msgs::msg::Message m;
+      m.header.stamp = this->now();
+      m.header.frame_id = frame_id_;
+      m.message = message;
+      rtcm_pub_->publish(m);
     });
   }
 
