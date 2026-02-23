@@ -90,3 +90,7 @@ gen/*
 *.out
 *.app
 
+build/
+install/
+log/
+
