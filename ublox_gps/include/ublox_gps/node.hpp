@@ -146,7 +146,7 @@ class UbloxNode final : public rclcpp::Node {
   /**
    * @brief Subscription handler for RTCM data
    */
-  rclcpp::Subscription<rtcm_msgs::msg::Message>::SharedPtr subscription_;
+  rclcpp::Subscription<rtcm_msgs::msg::Message>::SharedPtr subscription_rtcm_;
 
   /**
    * @brief Initialize the I/O handling.

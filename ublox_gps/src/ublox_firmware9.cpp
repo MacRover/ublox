@@ -23,6 +23,15 @@ UbloxFirmware9::UbloxFirmware9(const std::string & frame_id, std::shared_ptr<dia
   {
     nav_timeutc_pub_ = node->create_publisher<ublox_msgs::msg::NavTIMEUTC>("navtimeutc", 1);
   }
+
+  enable_rtk_msg_type_1005 = getRosBoolean(node_, "rtcm.type_1005");
+  enable_rtk_msg_type_1074 = getRosBoolean(node_, "rtcm.type_1074");
+  enable_rtk_msg_type_1077 = getRosBoolean(node_, "rtcm.type_1077");
+  enable_rtk_msg_type_1084 = getRosBoolean(node_, "rtcm.type_1084");
+  enable_rtk_msg_type_1087 = getRosBoolean(node_, "rtcm.type_1087");
+  enable_rtk_msg_type_1124 = getRosBoolean(node_, "rtcm.type_1124");
+  enable_rtk_msg_type_1127 = getRosBoolean(node_, "rtcm.type_1127");
+  enable_rtk_msg_type_1230 = getRosBoolean(node_, "rtcm.type_1230");
 }
 
 bool UbloxFirmware9::configureUblox(std::shared_ptr<ublox_gps::Gps> gps)
@@ -114,6 +123,29 @@ bool UbloxFirmware9::configureUblox(std::shared_ptr<ublox_gps::Gps> gps)
     throw std::runtime_error("Failed to configure NMEA");
   }
 
+  ublox_msgs::msg::CfgVALSET cfg_rtcm;
+  cfg_rtcm.layers = ublox_msgs::msg::CfgVALSET::LAYER_RAM;
+
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1005, enable_rtk_msg_type_1005));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1074, enable_rtk_msg_type_1074));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1077, enable_rtk_msg_type_1077));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1084, enable_rtk_msg_type_1084));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1087, enable_rtk_msg_type_1087));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1124, enable_rtk_msg_type_1124));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1127, enable_rtk_msg_type_1127));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1230, enable_rtk_msg_type_1230));
+
+  if (getRosBoolean(node_, "rtcm.set"))
+  {
+    RCLCPP_DEBUG(node_->get_logger(), "Enabling RTCM for base...");
+
+    if (!gps->configure(cfg_rtcm))
+    {
+      throw std::runtime_error("Failed to configure RTCM");
+    }
+
+    RCLCPP_DEBUG(node_->get_logger(), "RTCM Enabled!");
+  }
   return true;
 }
 

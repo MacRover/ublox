@@ -232,15 +232,16 @@ class CallbackHandlers final {
     while (i + 3 < buffer_size)
     {
       // Check for preamble and reserved bits
-      if (!(buffer[i] == 0xD3 && (buffer[++i] & 0xFC) == 0x00))
+      if (!(buffer[i] == 0xD3 && (buffer[i + 1] & 0xFC) == 0x00))
       {
+        i++;
         continue;
       }
 
       // Extract payload length from the next 2 bytes
-      uint16_t length = ((uint16_t)buffer[i] & 0x03) << 8 | (uint16_t)buffer[i + 1];
+      uint16_t length = ((uint16_t)buffer[i + 1] & 0x03) << 8 | (uint16_t)buffer[i + 2];
       // Align index of buffer to the first byte of the payload
-      i += 2;
+      i += 3;
       uint32_t crc = ublox::Crc24Quick(0x000000, length + 3, &buffer[i - 3]);
 
       if (buffer_size > i + length + 3)

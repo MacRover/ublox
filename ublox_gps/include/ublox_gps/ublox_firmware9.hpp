@@ -50,6 +50,15 @@ private:
   ublox_msgs::msg::CfgVALSETCfgdata generateSignalConfig(uint32_t signalID, bool enable);
   rclcpp::Publisher<ublox_msgs::msg::NavTIMEGPS>::SharedPtr nav_timegps_pub_;
   rclcpp::Publisher<ublox_msgs::msg::NavTIMEUTC>::SharedPtr nav_timeutc_pub_;
+
+  bool enable_rtk_msg_type_1005;
+  bool enable_rtk_msg_type_1074;
+  bool enable_rtk_msg_type_1077;
+  bool enable_rtk_msg_type_1084;
+  bool enable_rtk_msg_type_1087;
+  bool enable_rtk_msg_type_1124;
+  bool enable_rtk_msg_type_1127;
+  bool enable_rtk_msg_type_1230;
 };
 
 }  // namespace ublox_node

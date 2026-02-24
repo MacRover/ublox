@@ -257,7 +257,8 @@ void UbloxNode::getRosParams() {
   uart_in_ = declareRosIntParameter<uint16_t>(this, "uart1.in", ublox_msgs::msg::CfgPRT::PROTO_UBX
                                               | ublox_msgs::msg::CfgPRT::PROTO_NMEA
                                               | ublox_msgs::msg::CfgPRT::PROTO_RTCM);
-  uart_out_ = declareRosIntParameter<uint16_t>(this, "uart1.out", ublox_msgs::msg::CfgPRT::PROTO_UBX);
+  uart_out_ = declareRosIntParameter<uint16_t>(this, "uart1.out", ublox_msgs::msg::CfgPRT::PROTO_UBX 
+                                              | ublox_msgs::msg::CfgPRT::PROTO_RTCM3);
   // USB params
   set_usb_ = false;
   this->declare_parameter("usb.in", rclcpp::PARAMETER_INTEGER);
@@ -407,6 +408,16 @@ void UbloxNode::getRosParams() {
   this->declare_parameter("nmea.gnssToFilter.glonass", false);
   this->declare_parameter("nmea.gnssToFilter.beidou", false);
 
+  this->declare_parameter("rtcm.set", false);
+  this->declare_parameter("rtcm.type_1005", false);
+  this->declare_parameter("rtcm.type_1074", false);
+  this->declare_parameter("rtcm.type_1077", false);
+  this->declare_parameter("rtcm.type_1084", false);
+  this->declare_parameter("rtcm.type_1087", false);
+  this->declare_parameter("rtcm.type_1124", false);
+  this->declare_parameter("rtcm.type_1127", false);
+  this->declare_parameter("rtcm.type_1230", false);
+
   // Publish parameters
   this->declare_parameter("publish.all", false);
 
@@ -501,11 +512,13 @@ void UbloxNode::getRosParams() {
     nmea_pub_ = this->create_publisher<nmea_msgs::msg::Sentence>("nmea", 20);
   }
   if (getRosBoolean(this, "publish.rtcm")) {
+    // Create RTCM Publisher
     rtcm_pub_ = this->create_publisher<rtcm_msgs::msg::Message>("rtcm", 1);
   }
-
-  // Create subscriber for RTCM correction data to enable RTK
-  this->subscription_ = this->create_subscription<rtcm_msgs::msg::Message>("/rtcm", 10, std::bind(&UbloxNode::rtcmCallback, this, std::placeholders::_1));
+  else {
+    // Create subscriber for RTCM correction data to enable RTK
+    this->subscription_rtcm_ = this->create_subscription<rtcm_msgs::msg::Message>("/rtcm", 10, std::bind(&UbloxNode::rtcmCallback, this, std::placeholders::_1));
+  }
 }
 
 void UbloxNode::keepAlive() {
