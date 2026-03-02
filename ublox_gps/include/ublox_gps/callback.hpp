@@ -225,8 +225,8 @@ class CallbackHandlers final {
       return;
     }
 
-    const uint8_t* buffer = reinterpret_cast<const uint8_t*>(reader.getExtraData().data());
-    const size_t buffer_size = reader.getExtraData().size();
+    uint8_t* buffer;
+    size_t buffer_size = reader.getRawExtraData(&buffer);
     size_t i = 0;
 
     while (i + 3 < buffer_size)
@@ -244,7 +244,7 @@ class CallbackHandlers final {
       i += 3;
       uint32_t crc = ublox::Crc24Quick(0x000000, length + 3, &buffer[i - 3]);
 
-      if (buffer_size > i + length + 3)
+      if (buffer_size >= i + length + 3)
       {
         uint32_t recv_crc = ((uint32_t)buffer[i + length] << 16) | 
                             ((uint32_t)buffer[i + length + 1] << 8) | 
