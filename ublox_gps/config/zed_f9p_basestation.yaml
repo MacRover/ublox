@@ -4,14 +4,14 @@ ublox_gps_node:
     device: /dev/ttyACM0
     frame_id: gps
     uart1:
-      baudrate: 38400
+      baudrate: 115200
     tmode3: 1
     sv_in:
       reset: True               # True: disables and re-enables survey-in (resets)
                                 # False: Disables survey-in only if TMODE3 is
                                 # disabled
       min_dur: 60              # Survey-In Minimum Duration [s]
-      acc_lim: 3.0              # Survey-In Accuracy Limit [m]
+      acc_lim: 5.0              # Survey-In Accuracy Limit [m]
 
     publish:
       rtcm: true

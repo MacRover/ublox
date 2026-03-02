@@ -36,7 +36,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-
 #include "checksum.hpp"
 
 ///
@@ -368,7 +367,7 @@ class Reader {
    */
   Reader(const uint8_t *data, uint32_t count,
          const Options &options = Options()) :
-      data_(data), count_(count), found_(false), options_(options)
+      data_(data), count_(count), found_(false), options_(options), extra_data_size_(0)
   {
     extra_data_.reserve(1024);
   }
@@ -386,11 +385,17 @@ class Reader {
     }
 
     // Search for a message header
-    for( ; count_ > 0; --count_, ++data_) {
+    size_t i = 0;
+    for(; count_ > 0; --count_, ++data_, i++) {
       if (data_[0] == options_.sync_a &&
           (count_ == 1 || data_[1] == options_.sync_b)) {
         break;
       } else {
+        if (extra_data_size_ < 1024)
+        {
+          r_extra_data_[i] = data_[0];
+          extra_data_size_++;
+        }
         extra_data_.push_back(data_[0]);
       }
     }
@@ -542,11 +547,18 @@ class Reader {
     return extra_data_;
   }
 
+  size_t getRawExtraData(uint8_t** data) {
+    *data = &r_extra_data_[0];
+    return extra_data_size_;
+  }
+
 private:
   //! The buffer of message bytes
   const uint8_t *data_;
   //! Unused data from the read buffer, contains nmea messages.
   std::string extra_data_;
+  uint8_t r_extra_data_[1024];
+  size_t extra_data_size_;
   //! the number of bytes in the buffer, //! decrement as the buffer is read
   uint32_t count_;
   //! Whether or not a message has been found
