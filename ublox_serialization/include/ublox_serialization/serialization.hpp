@@ -36,7 +36,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <iostream>
 #include "checksum.hpp"
 
 ///
@@ -386,14 +385,16 @@ class Reader {
     }
 
     // Search for a message header
-    for(; count_ > 0; --count_, ++data_, extra_data_size_++) {
+    size_t i = 0;
+    for(; count_ > 0; --count_, ++data_, i++) {
       if (data_[0] == options_.sync_a &&
           (count_ == 1 || data_[1] == options_.sync_b)) {
         break;
       } else {
         if (extra_data_size_ < 1024)
         {
-          r_extra_data_[extra_data_size_] = data_[0];
+          r_extra_data_[i] = data_[0];
+          extra_data_size_++;
         }
         extra_data_.push_back(data_[0]);
       }
