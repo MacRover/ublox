@@ -13,5 +13,5 @@ ublox_gps_node:
     #dgnss_mode: 2
 
     publish:
-        rxm:
-          rtcm: True
+      rxm:
+        rtcm: True
