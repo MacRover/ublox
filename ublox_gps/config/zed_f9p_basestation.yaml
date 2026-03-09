@@ -1,10 +1,11 @@
-ublox_gps_node:
+ublox_gps_node_basestation:
   ros__parameters:
     debug: 1                    # Range 0-4 (0 means no debug statements will print)
     device: /dev/ttyACM0
     frame_id: gps
     uart1:
       baudrate: 115200
+    nav_rate: 1
     tmode3: 1
     sv_in:
       reset: True               # True: disables and re-enables survey-in (resets)
@@ -16,6 +17,8 @@ ublox_gps_node:
     publish:
       rtcm: true
       nmea: false
+      nav:
+        svin: true
 
     rtcm:
       set: true
