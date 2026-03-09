@@ -11,3 +11,7 @@ ublox_gps_node:
 
     #1 for rtk float, 2 for rtk fixed
     #dgnss_mode: 2
+
+    publish:
+        rxm:
+          rtcm: True
