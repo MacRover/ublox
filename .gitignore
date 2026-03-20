@@ -94,3 +94,5 @@ build/
 install/
 log/
 
+#PYCACHE FILES
+__pycache__/
