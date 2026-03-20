@@ -33,7 +33,7 @@ def generate_launch_description():
                                              ])
 
     return launch.LaunchDescription([ublox_gps_node_0, 
-                                     ublox_gps_node_1
+                                     ublox_gps_node_1,
 
                                      launch.actions.RegisterEventHandler(
                                          event_handler=launch.event_handlers.OnProcessExit(
