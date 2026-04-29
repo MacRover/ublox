@@ -109,9 +109,9 @@ bool HpgRefProduct::configureUblox(std::shared_ptr<ublox_gps::Gps> gps) {
                                fixed_pos_acc_)) {
       throw std::runtime_error("Failed to set TMODE3 to fixed.");
     }
-    if (!gps->configRtcm(rtcms_)) {
-      throw std::runtime_error("Failed to set RTCM rates");
-    }
+    // if (!gps->configRtcm(rtcms_)) {
+    //   throw std::runtime_error("Failed to set RTCM rates");
+    // }
     mode_ = FIXED;
   } else if (tmode3_ == ublox_msgs::msg::CfgTMODE3::FLAGS_MODE_SURVEY_IN) {
     if (!svin_reset_) {
@@ -173,6 +173,7 @@ void HpgRefProduct::subscribe(std::shared_ptr<ublox_gps::Gps> gps) {
   // Subscribe to Nav Survey-In
   // Save off the gps pointer so we can use it in the callback later.
   gps_ = gps;
+  RCLCPP_DEBUG(node_->get_logger(), "Successfully configured Nav SVIN messages");
   gps->subscribe<ublox_msgs::msg::NavSVIN>(std::bind(
       &HpgRefProduct::callbackNavSvIn, this, std::placeholders::_1), 1);
 }
@@ -191,20 +192,20 @@ void HpgRefProduct::callbackNavSvIn(const ublox_msgs::msg::NavSVIN& m) {
 }
 
 bool HpgRefProduct::setTimeMode(std::shared_ptr<ublox_gps::Gps> gps) {
-  RCLCPP_INFO(node_->get_logger(), "Setting mode (internal state) to Time Mode");
-  mode_ = TIME;
+  // RCLCPP_INFO(node_->get_logger(), "Setting mode (internal state) to Time Mode");
+  // mode_ = TIME;
 
   // Set the Measurement & nav rate to user config
   // (survey-in sets nav_rate to 1 Hz regardless of user setting)
-  if (!gps->configRate(meas_rate_, nav_rate_)) {
-    RCLCPP_ERROR(node_->get_logger(), "Failed to set measurement rate to %d ms navigation rate to %d cycles",
-                 meas_rate_, nav_rate_);
-  }
+  // if (!gps->configRate(meas_rate_, nav_rate_)) {
+  //   RCLCPP_ERROR(node_->get_logger(), "Failed to set measurement rate to %d ms navigation rate to %d cycles",
+  //                meas_rate_, nav_rate_);
+  // }
   // Enable the RTCM out messages
-  if (!gps->configRtcm(rtcms_)) {
-    RCLCPP_ERROR(node_->get_logger(), "Failed to configure RTCM IDs");
-    return false;
-  }
+  // if (!gps->configRtcm(rtcms_)) {
+  //   RCLCPP_ERROR(node_->get_logger(), "Failed to configure RTCM IDs");
+  //   return false;
+  // }
   return true;
 }
 

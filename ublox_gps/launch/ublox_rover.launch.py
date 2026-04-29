@@ -17,8 +17,8 @@ def generate_launch_description():
                                              output='both',
                                              parameters=[params_0],
                                              remappings=[
-                                                ('/ublox_gps_node_rove_0/fix', '/rover/fix_0'),
-                                                ('ublox_gps_node_rover_0/fix_velocity', 'rover/fix_velocity_0'),
+                                                ('/ublox_gps_node_rover_0/fix', '/rover/fix_0'),
+                                                ('/ublox_gps_node_rover_0/fix_velocity', '/rover/fix_velocity_0'),
                                              ])
 
     params_1 = os.path.join(config_directory, 'zed_f9p_rover1.yaml')
@@ -29,11 +29,11 @@ def generate_launch_description():
                                              parameters=[params_1],
                                              remappings=[
                                                 ('/ublox_gps_node_rover_1/fix', '/rover/fix_1'),
-                                                ('ublox_gps_node_rover_1/fix_velocity', 'rover/fix_velocity_1'),
+                                                ('/ublox_gps_node_rover_1/fix_velocity', '/rover/fix_velocity_1'),
                                              ])
 
     return launch.LaunchDescription([ublox_gps_node_0, 
-                                     ublox_gps_node_1,
+                                    #  ublox_gps_node_1,
 
                                      launch.actions.RegisterEventHandler(
                                          event_handler=launch.event_handlers.OnProcessExit(
@@ -42,11 +42,11 @@ def generate_launch_description():
                                                  event=launch.events.Shutdown())],
                                          )),
 
-                                     launch.actions.RegisterEventHandler(
-                                         event_handler=launch.event_handlers.OnProcessExit(
-                                             target_action=ublox_gps_node_1,
-                                             on_exit=[launch.actions.EmitEvent(
-                                                 event=launch.events.Shutdown())],
-                                         )),
+                                    #  launch.actions.RegisterEventHandler(
+                                    #      event_handler=launch.event_handlers.OnProcessExit(
+                                    #          target_action=ublox_gps_node_1,
+                                    #          on_exit=[launch.actions.EmitEvent(
+                                    #              event=launch.events.Shutdown())],
+                                    #      )),
 
                                      ])
