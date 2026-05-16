@@ -3,6 +3,7 @@ ublox_gps_node_rover_0:
     debug: 1                    # Range 0-4 (0 means no debug statements will print)
     device: /dev/ttyACM0
     frame_id: gps_rover
+    hpg_type: 2
     uart1:
       baudrate: 115200
     nav_rate: 1
@@ -12,7 +13,15 @@ ublox_gps_node_rover_0:
 
     #1 for rtk float, 2 for rtk fixed
     #dgnss_mode: 2
+    gnss:
+      gps: true
+      glonass: true
+      galileo: true
+      beidou: true
+      qzss: true
 
     publish:
       rxm:
         rtcm: True
+      nav:
+        relposned: true

@@ -257,8 +257,7 @@ void UbloxNode::getRosParams() {
   // UART 1 params
   baudrate_ = declareRosIntParameter<uint32_t>(this, "uart1.baudrate", 9600);
   uart_in_ = declareRosIntParameter<uint16_t>(this, "uart1.in", ublox_msgs::msg::CfgPRT::PROTO_UBX
-                                              | ublox_msgs::msg::CfgPRT::PROTO_NMEA
-                                              | ublox_msgs::msg::CfgPRT::PROTO_RTCM);
+                                              | ublox_msgs::msg::CfgPRT::PROTO_RTCM3);
   uart_out_ = declareRosIntParameter<uint16_t>(this, "uart1.out", ublox_msgs::msg::CfgPRT::PROTO_UBX 
                                               | ublox_msgs::msg::CfgPRT::PROTO_RTCM3);
   // USB params

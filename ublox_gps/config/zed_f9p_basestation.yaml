@@ -13,7 +13,7 @@ ublox_gps_node_basestation:
       reset: True               # True: disables and re-enables survey-in (resets)
                                 # False: Disables survey-in only if TMODE3 is
                                 # disabled
-      min_dur: 150              # Survey-In Minimum Duration [s]
+      min_dur: 300              # Survey-In Minimum Duration [s]
       acc_lim: 3.0              # Survey-In Accuracy Limit [m]
 
     publish:
@@ -29,6 +29,13 @@ ublox_gps_node_basestation:
       type_1084: true
       type_1124: true
       type_1230: true
+    
+    gnss:
+      gps: true
+      glonass: true
+      galileo: true
+      beidou: true
+      qzss: true
     
     nmea:
       set: false
