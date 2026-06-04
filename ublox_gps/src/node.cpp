@@ -410,11 +410,16 @@ void UbloxNode::getRosParams() {
   this->declare_parameter("nmea.gnssToFilter.beidou", false);
 
   this->declare_parameter("rtcm.set", false);
+  this->declare_parameter("rtcm.moving_base", false);
   this->declare_parameter("rtcm.type_1005", false);
+  this->declare_parameter("rtcm.type_4072_0", false);
+  this->declare_parameter("rtcm.type_4072_1", false);
   this->declare_parameter("rtcm.type_1074", false);
   this->declare_parameter("rtcm.type_1077", false);
   this->declare_parameter("rtcm.type_1084", false);
   this->declare_parameter("rtcm.type_1087", false);
+  this->declare_parameter("rtcm.type_1094", false);
+  this->declare_parameter("rtcm.type_1097", false);
   this->declare_parameter("rtcm.type_1124", false);
   this->declare_parameter("rtcm.type_1127", false);
   this->declare_parameter("rtcm.type_1230", false);
@@ -518,8 +523,9 @@ void UbloxNode::getRosParams() {
     // Create RTCM Publisher
     rtcm_pub_ = this->create_publisher<rtcm_msgs::msg::Message>("rtcm", 1);
   }
-  else {
+  else if (getRosBoolean(this, "rtcm.moving_base")) {
     // Create subscriber for RTCM correction data to enable RTK
+    // Only do this when configured as a moving base, RTCM data will be sent directly to serial from moving base otherwise
     this->subscription_rtcm_ = this->create_subscription<rtcm_msgs::msg::Message>("/rtcm", 10, std::bind(&UbloxNode::rtcmCallback, this, std::placeholders::_1));
   }
 }

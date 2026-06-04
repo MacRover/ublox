@@ -52,10 +52,14 @@ private:
   rclcpp::Publisher<ublox_msgs::msg::NavTIMEUTC>::SharedPtr nav_timeutc_pub_;
 
   bool enable_rtk_msg_type_1005;
+  bool enable_rtk_msg_type_4072_0;
+  bool enable_rtk_msg_type_4072_1;
   bool enable_rtk_msg_type_1074;
   bool enable_rtk_msg_type_1077;
   bool enable_rtk_msg_type_1084;
   bool enable_rtk_msg_type_1087;
+  bool enable_rtk_msg_type_1094;
+  bool enable_rtk_msg_type_1097;
   bool enable_rtk_msg_type_1124;
   bool enable_rtk_msg_type_1127;
   bool enable_rtk_msg_type_1230;

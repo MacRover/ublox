@@ -29,9 +29,13 @@ UbloxFirmware9::UbloxFirmware9(const std::string & frame_id, std::shared_ptr<dia
   enable_rtk_msg_type_1077 = getRosBoolean(node_, "rtcm.type_1077");
   enable_rtk_msg_type_1084 = getRosBoolean(node_, "rtcm.type_1084");
   enable_rtk_msg_type_1087 = getRosBoolean(node_, "rtcm.type_1087");
+  enable_rtk_msg_type_1094 = getRosBoolean(node_, "rtcm.type_1094");
+  enable_rtk_msg_type_1097 = getRosBoolean(node_, "rtcm.type_1097");
   enable_rtk_msg_type_1124 = getRosBoolean(node_, "rtcm.type_1124");
   enable_rtk_msg_type_1127 = getRosBoolean(node_, "rtcm.type_1127");
   enable_rtk_msg_type_1230 = getRosBoolean(node_, "rtcm.type_1230");
+  enable_rtk_msg_type_4072_0 = getRosBoolean(node_, "rtcm.type_4072_0");
+  enable_rtk_msg_type_4072_1 = getRosBoolean(node_, "rtcm.type_4072_1");
 }
 
 bool UbloxFirmware9::configureUblox(std::shared_ptr<ublox_gps::Gps> gps)
@@ -126,20 +130,44 @@ bool UbloxFirmware9::configureUblox(std::shared_ptr<ublox_gps::Gps> gps)
   ublox_msgs::msg::CfgVALSET cfg_rtcm;
   cfg_rtcm.layers = ublox_msgs::msg::CfgVALSET::LAYER_RAM;
 
-  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1005, enable_rtk_msg_type_1005));
-  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1074, enable_rtk_msg_type_1074));
-  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1077, enable_rtk_msg_type_1077));
-  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1084, enable_rtk_msg_type_1084));
-  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1087, enable_rtk_msg_type_1087));
-  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1124, enable_rtk_msg_type_1124));
-  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1127, enable_rtk_msg_type_1127));
-  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1230, enable_rtk_msg_type_1230));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1005_USB, enable_rtk_msg_type_1005));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1074_USB, enable_rtk_msg_type_1074));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1077_USB, enable_rtk_msg_type_1077));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1084_USB, enable_rtk_msg_type_1084));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1087_USB, enable_rtk_msg_type_1087));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1094_USB, enable_rtk_msg_type_1094));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1097_USB, enable_rtk_msg_type_1097));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1124_USB, enable_rtk_msg_type_1124));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1127_USB, enable_rtk_msg_type_1127));
+  cfg_rtcm.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1230_USB, enable_rtk_msg_type_1230));
+
+  ublox_msgs::msg::CfgVALSET cfg_rtcm_moving;
+  cfg_rtcm_moving.layers = ublox_msgs::msg::CfgVALSET::LAYER_RAM;
+
+  cfg_rtcm_moving.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE4072_0_UART1, enable_rtk_msg_type_4072_0));
+  cfg_rtcm_moving.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE4072_1_UART1, enable_rtk_msg_type_4072_1));
+  cfg_rtcm_moving.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1074_UART1, enable_rtk_msg_type_1074));
+  cfg_rtcm_moving.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1077_UART1, enable_rtk_msg_type_1077));
+  cfg_rtcm_moving.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1084_UART1, enable_rtk_msg_type_1084));
+  cfg_rtcm_moving.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1087_UART1, enable_rtk_msg_type_1087));
+  cfg_rtcm_moving.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1094_UART1, enable_rtk_msg_type_1094));
+  cfg_rtcm_moving.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1097_UART1, enable_rtk_msg_type_1097));
+  cfg_rtcm_moving.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1124_UART1, enable_rtk_msg_type_1124));
+  cfg_rtcm_moving.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1127_UART1, enable_rtk_msg_type_1127));
+  cfg_rtcm_moving.cfgdata.push_back(generateSignalConfig(signal::RTCM_3X_TYPE1230_UART1, enable_rtk_msg_type_1230));
 
   if (getRosBoolean(node_, "rtcm.set"))
   {
     RCLCPP_DEBUG(node_->get_logger(), "Enabling RTCM for base...");
 
-    if (!gps->configure(cfg_rtcm))
+    if (getRosBoolean(node_, "rtcm.moving_base"))
+    {
+      if (!gps->configure(cfg_rtcm_moving))
+      {
+        throw std::runtime_error("Failed to configure RTCM for moving base");
+      }
+    }
+    else if (!gps->configure(cfg_rtcm))
     {
       throw std::runtime_error("Failed to configure RTCM");
     }

@@ -192,8 +192,8 @@ void HpgRefProduct::callbackNavSvIn(const ublox_msgs::msg::NavSVIN& m) {
 }
 
 bool HpgRefProduct::setTimeMode(std::shared_ptr<ublox_gps::Gps> gps) {
-  // RCLCPP_INFO(node_->get_logger(), "Setting mode (internal state) to Time Mode");
-  // mode_ = TIME;
+  RCLCPP_INFO(node_->get_logger(), "Setting mode (internal state) to Time Mode");
+  mode_ = TIME;
 
   // Set the Measurement & nav rate to user config
   // (survey-in sets nav_rate to 1 Hz regardless of user setting)
@@ -206,6 +206,7 @@ bool HpgRefProduct::setTimeMode(std::shared_ptr<ublox_gps::Gps> gps) {
   //   RCLCPP_ERROR(node_->get_logger(), "Failed to configure RTCM IDs");
   //   return false;
   // }
+  (void)gps;
   return true;
 }
 

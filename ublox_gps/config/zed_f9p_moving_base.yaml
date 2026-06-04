@@ -2,7 +2,7 @@ ublox_gps_node_rover_1:
   ros__parameters:
     debug: 1                    # Range 0-4 (0 means no debug statements will print)
     device: /dev/ttyUSB0
-    frame_id: gps_rover
+    frame_id: gps_moving_base
     hpg_type: 0
     uart1:
       baudrate: 115200
@@ -13,6 +13,16 @@ ublox_gps_node_rover_1:
 
     #1 for rtk float, 2 for rtk fixed
     #dgnss_mode: 2
+    rtcm:
+      set: true
+      moving_base: true
+      type_4072_0: true
+      type_1074: true
+      type_1084: true
+      type_1094: true
+      type_1124: true
+      type_1230: true
+
     gnss:
       gps: true
       glonass: true
@@ -20,6 +30,6 @@ ublox_gps_node_rover_1:
       beidou: true
       qzss: true
 
-    publish:
-      rxm:
-        rtcm: True
+    # publish:
+    #   rxm:
+    #     rtcm: True
