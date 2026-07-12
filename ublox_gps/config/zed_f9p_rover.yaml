@@ -3,7 +3,7 @@ ublox_gps_node_rover_0:
     debug: 1                    # Range 0-4 (0 means no debug statements will print)
     device: /dev/ttyACM0
     frame_id: gps_rover
-    hpg_type: 2
+    hpg_reference: false
     uart1:
       baudrate: 115200
     nav_rate: 1
