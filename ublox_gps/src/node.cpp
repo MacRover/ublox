@@ -219,11 +219,10 @@ void UbloxNode::addFirmwareInterface() {
 
 void UbloxNode::addProductInterface(const std::string & product_category,
                                     const std::string & ref_rov) {
-  uint8_t hpg_type_;
-  getRosUint(this, "hpg_type", hpg_type_);
-  if ((product_category == "HPG" || product_category == "HPS") && (ref_rov == "REF" || hpg_type_ == 1)) {
+  bool hpg_ref_ = getRosBoolean(this, "hpg_reference");
+  if ((product_category == "HPG" || product_category == "HPS") && (ref_rov == "REF" || hpg_ref_)) {
     components_.push_back(std::make_shared<HpgRefProduct>(nav_rate_, meas_rate_, updater_, rtcms_, this));
-  } else if ((product_category == "HPG" || product_category == "HPS") && (ref_rov == "ROV" || hpg_type_ == 2)) {
+  } else if ((product_category == "HPG" || product_category == "HPS") && (ref_rov == "ROV")) {
     components_.push_back(std::make_shared<HpgRovProduct>(nav_rate_, updater_, this));
   } else if (product_category == "HPG" || product_category == "HPS") {
     components_.push_back(std::make_shared<HpPosRecProduct>(nav_rate_, meas_rate_, frame_id_, updater_, rtcms_, this));
@@ -424,7 +423,7 @@ void UbloxNode::getRosParams() {
   this->declare_parameter("rtcm.type_1127", false);
   this->declare_parameter("rtcm.type_1230", false);
 
-  this->declare_parameter("hpg_type", 0);
+  this->declare_parameter("hpg_reference", false);
 
   // Publish parameters
   this->declare_parameter("publish.all", false);
