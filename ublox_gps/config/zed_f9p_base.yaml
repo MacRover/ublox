@@ -1,7 +1,7 @@
 ublox_gps_node_basestation:
   ros__parameters:
     debug: 1                    # Range 0-4 (0 means no debug statements will print)
-    device: /dev/ttyACM1
+    device: /dev/ttyACM0
     frame_id: gps_base
     hpg_reference: true
     uart1:
@@ -12,7 +12,7 @@ ublox_gps_node_basestation:
 
     arp: 
       lla_flag: true
-      position: [43.2603400, -79.9196526, 6297.1] #WGS84 deg, deg, cm
+      position: [42.7393500, -81.2227301, 19013.6] #WGS84 deg, deg, cm
       position_hp: [0,0,0] #deg*e-9, deg*e-9, mm*e-1
       acc: 0.01 #m
 
@@ -26,8 +26,8 @@ ublox_gps_node_basestation:
     publish:
       rtcm: true
       nmea: false
-      nav:
-        svin: true
+      # nav:
+      #   svin: true
 
     rtcm:
       set: true
