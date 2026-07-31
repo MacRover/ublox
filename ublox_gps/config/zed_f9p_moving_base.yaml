@@ -1,7 +1,7 @@
 ublox_gps_node_rover_1:
   ros__parameters:
     debug: 1                    # Range 0-4 (0 means no debug statements will print)
-    device: /dev/ttyUSB0
+    device: /dev/ttyMovingBase
     frame_id: gps_moving_base
     hpg_reference: false
     uart1:
@@ -30,6 +30,6 @@ ublox_gps_node_rover_1:
       beidou: true
       qzss: true
 
-    # publish:
-    #   rxm:
-    #     rtcm: True
+    publish:
+      rxm:
+        rtcm: True
