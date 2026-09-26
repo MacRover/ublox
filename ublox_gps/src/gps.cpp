@@ -488,7 +488,7 @@ bool Gps::configTmode3Fixed(bool lla_flag,
     // Convert from [deg] to [deg * 1e-7]
     tmode3.ecef_x_or_lat = static_cast<int>(round(arp_position[0] * 1e7));
     tmode3.ecef_y_or_lon = static_cast<int>(round(arp_position[1] * 1e7));
-    tmode3.ecef_z_or_alt = static_cast<int>(round(arp_position[2] * 1e7));
+    tmode3.ecef_z_or_alt = static_cast<int>(round(arp_position[2])); // cm
   } else {
     // Convert from m to cm
     tmode3.ecef_x_or_lat = static_cast<int>(round(arp_position[0] * 1e2));
